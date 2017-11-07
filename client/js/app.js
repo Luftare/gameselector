@@ -32,7 +32,11 @@ const app = new Vue({
       socket.emit("updateName", this.myName);
     },
     voteGame(game) {
-      socket.emit("userVote", game.id);
+      if(this.self.vote === game.id) {
+        socket.emit("userVote", 0);
+      } else {
+        socket.emit("userVote", game.id); 
+      }
     },
     resetVote() {
       socket.emit("userVote", 0);

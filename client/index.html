@@ -2,25 +2,20 @@
 <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="css/style.css">
 <div id="app" v-cloak>
-  <div class="left">
-    <input v-model="myName" @input="updateName" placeholder="Name"/>
-    <h4>Players:</h4>
-    <ul>
-      <li v-for="user in users" v-bind:class="{ voted: user.vote !== 0 }">{{user.name}}</li>
-    </ul>
-    <hr>
-    <h4>Votes:</h4>
-    <ul>
-      <li v-for="game in descendingVotedGames"><marquee behavior="alternate">{{game.name}}: <span v-show="self.vote" class="nametag" v-for="user in game.voters">{{user.name}}</span></marquee></li>
-    </ul>
+  <input v-model="myName" @input="updateName" placeholder="Name"/>
+  <h4>Players:</h4>
+  <div class="tags">
+    <span class="tag pink" v-for="user in users" v-bind:class="{ voted: user.vote !== 0 }">{{user.name}}</span>
   </div>
-  <div class="right">
-    <h4>Games:</h4>
-    <button @click="resetVote">reset</button>
-    <ul>
-      <li v-for="game in games" @click="voteGame(game)">{{game.name}}</li>
-    </ul>
+  <h4>Games:</h4>
+  <div class="tags">
+    <span class="tag green" v-for="game in games" @click="voteGame(game)" v-bind:class="{ pink: self.vote === game.id }">{{game.name}}</span>
   </div>
+  <hr>
+  <h4>Votes:</h4>
+  <ul>
+    <li v-for="(game, i) in descendingVotedGames"><marquee behavior="alternate"><img height="24" v-if="i === 0" src="http://pixelartmaker.com/art/095fdd43110bb39.png">{{i + 1}}: {{game.name}} <span v-show="self.vote" class="tag pink" v-for="user in game.voters">{{user.name}}</span></marquee></li>
+  </ul>
 </div>
 <script src="socket.io.js"></script>
 <script src="vue.min.js"></script>
