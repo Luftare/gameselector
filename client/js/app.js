@@ -1,6 +1,6 @@
 let socket;
 const app = new Vue({
-  el: "#app",
+  el: "#wall",
   data: {
     id: null,
     myName: "",
@@ -12,8 +12,10 @@ const app = new Vue({
     votePopulatedGames() {
       return this.games.map(g => {
         const voters = this.users.filter(u => u.vote === g.id);
-        return Object.assign({}, g, { voters });
-      })
+        return Object.assign({}, g, {
+          voters
+        });
+      });
     },
     votedGames() {
       return this.votePopulatedGames.filter(g => g.voters.length > 0);
@@ -21,9 +23,15 @@ const app = new Vue({
     descendingVotedGames() {
       return this.votedGames.sort((a, b) => b.voters.length - a.voters.length);
     },
+    winningGame() {
+      return this.descendingVotedGames[0];
+    },
     self() {
       const u = this.users.find(p => p.id === this.id);
-      return u? u : {};
+      return u ? u : {};
+    },
+    allVoted() {
+      return this.users.filter(u => u.vote === 0).length === 0;
     }
   },
   methods: {
@@ -32,10 +40,11 @@ const app = new Vue({
       socket.emit("updateName", this.myName);
     },
     voteGame(game) {
-      if(this.self.vote === game.id) {
+      //document.getElementById("wall").style.backgroundImage=`url(${game.url})`
+      if (this.self.vote === game.id) {
         socket.emit("userVote", 0);
       } else {
-        socket.emit("userVote", game.id); 
+        socket.emit("userVote", game.id);
       }
     },
     resetVote() {
@@ -44,20 +53,26 @@ const app = new Vue({
   },
   mounted() {
     const myName = JSON.parse(localStorage.getItem('myName'));
-    socket = io();
+    socket = io(document.URL, {'forceNew': true});
     socket.on("connect", () => {
       this.id = socket.io.engine.id;
       this.connected = true;
-      if(myName) {
+      if (myName) {
         this.myName = myName;
         this.updateName(myName);
       }
     });
-    
+
     socket.on("usersUpdate", users => {
       this.users = users;
+      setTimeout(() => {
+        if (this.allVoted) {
+          const game = this.winningGame;
+          document.getElementById("wall").style.backgroundImage = `url(${game.url})`
+        }
+      }, 0);
     });
-    
+
     socket.on("gamesUpdate", games => {
       this.games = games;
     })
