@@ -1,0 +1,65 @@
+[v-cloak] {
+  display: none;
+}
+
+* {
+  font-family: 'Press Start 2P', cursive;
+  color: #111;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+li {
+  list-style: none;
+  padding: 5px;
+  background-color: #AAA;
+  box-sizing: border-box;
+  margin-top: 3px;
+}
+
+hr {
+  clear: both;
+}
+
+li:hover {
+  background-color: #AAF;
+  cursor: hand;
+}
+
+h4 {
+  clear: both;
+}
+
+.left {
+  width: 400px;
+  float: left;
+}
+
+.right {
+  width: 200px;
+  float: right;
+}
+
+.nametag {
+  font-size: 16px;
+  background-color: red;
+  color: white;
+  padding: 3px;
+  margin-right: 3px;
+}
+
+.voted {
+  color: gray;
+}
+
+#app {
+  margin-top: 50px;
+  padding: 25px;
+  max-width: 650px;
+  //background-color: #DDD;
+  display: block;
+  margin: auto;
+}
